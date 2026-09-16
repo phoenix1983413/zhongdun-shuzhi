@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /assets/img/_gen_icons.py
+
+Sitemap: https://phoenix1983413.github.io/zhongdun-shuzhi/sitemap.xml
