@@ -1,0 +1,880 @@
+/* ==========================================================================
+   中盾数智 · 首页「深空」主题层
+   --------------------------------------------------------------------------
+   只在首页加载（<html data-theme="deep">）。内页完全不受影响：
+   本文件所有规则都收敛在 html[data-theme="deep"] 之下，site.css 一行未改。
+
+   设计意图：深空蓝底 + 工业级硬核质感，面向 B 端具身智能。
+   动效原则：克制、低频、低亮度。发光只做层次，不做主角。
+   ========================================================================== */
+
+html[data-theme="deep"] {
+  color-scheme: dark;
+
+  /* ---- 强调色：科技青 ---- */
+  --blue: #22d3ee;
+  --blue-focus: #67e8f9;
+  --blue-on-dark: #22d3ee;
+
+  /* ---- 文字：白 / 银灰阶 ---- */
+  --ink: #ffffff;
+  --ink-80: #e2e8f0;
+  --ink-60: #cbd5e1;
+  --ink-48: #94a3b8;
+  --ink-32: #64748b;
+
+  /* ---- 画布：深空蓝分层 ---- */
+  --canvas: #0f172a;
+  --parchment: #0a1020;
+  --pearl: #0c1324;
+  --tile: #131c2e;
+  --tile-2: #131d33;
+  --black: #060b15;
+
+  /* ---- 线：冷灰 + 青 ---- */
+  --hairline: rgba(203, 213, 225, 0.13);
+  --divider: rgba(203, 213, 225, 0.08);
+  --hairline-dark: rgba(34, 211, 238, 0.16);
+  --divider-dark: rgba(34, 211, 238, 0.1);
+
+  /* ---- 暗底文字 ---- */
+  --on-dark: #ffffff;
+  --on-dark-muted: #94a3b8;
+  --body-on-dark: #cbd5e1;
+
+  /* ---- 本层新增：全息专用令牌 ---- */
+  --cyan: #22d3ee;
+  --cyan-soft: rgba(34, 211, 238, 0.42);
+  --cyan-faint: rgba(34, 211, 238, 0.16);
+  --cyan-hair: rgba(34, 211, 238, 0.28);
+  --glass: rgba(8, 14, 28, 0.72);
+  --panel: linear-gradient(180deg, rgba(19, 29, 51, 0.92) 0%, rgba(12, 19, 36, 0.78) 100%);
+
+  /* ---- 动效：统一缓动，避免各处自定义 ---- */
+  --ease-out: cubic-bezier(0.16, 0.84, 0.44, 1);
+}
+
+/* 深色下页面级反馈 */
+html[data-theme="deep"] body {
+  background: var(--canvas);
+  color: var(--ink);
+}
+
+html[data-theme="deep"] ::selection {
+  background: rgba(34, 211, 238, 0.24);
+}
+
+html[data-theme="deep"] .skip-link {
+  background: var(--cyan);
+  color: #041018;
+}
+
+/* 滚动条（仅桌面 WebKit 生效，纯装饰） */
+@supports (scrollbar-color: red blue) {
+  html[data-theme="deep"] {
+    scrollbar-color: rgba(148, 163, 184, 0.35) transparent;
+    scrollbar-width: thin;
+  }
+}
+
+/* ==========================================================================
+   1. 导航 · 玻璃拟态
+   顶部完全透明，向下滚动后平滑过渡为半透明深色磨砂。
+   状态由 hero-tech.js 给 .nav 加 .is-scrolled 驱动。
+   ========================================================================== */
+
+html[data-theme="deep"] .nav {
+  background: transparent;
+  border-bottom-color: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  transition: background-color 0.5s var(--ease), border-color 0.5s var(--ease),
+    backdrop-filter 0.5s var(--ease), box-shadow 0.5s var(--ease);
+}
+
+html[data-theme="deep"] .nav.is-scrolled {
+  background: var(--glass);
+  border-bottom-color: var(--cyan-hair);
+  backdrop-filter: saturate(170%) blur(18px);
+  -webkit-backdrop-filter: saturate(170%) blur(18px);
+  box-shadow: 0 1px 0 0 rgba(34, 211, 238, 0.06),
+    0 18px 42px -34px rgba(0, 0, 0, 0.9);
+}
+
+html[data-theme="deep"] .nav__brand-cn {
+  color: var(--ink);
+}
+
+html[data-theme="deep"] .nav__brand-en {
+  color: var(--ink-48);
+}
+
+html[data-theme="deep"] .nav__links a {
+  color: var(--ink-60);
+}
+
+html[data-theme="deep"] .nav__links a:hover {
+  background: rgba(203, 213, 225, 0.08);
+  color: var(--ink);
+}
+
+html[data-theme="deep"] .nav__links a[aria-current="page"] {
+  color: var(--cyan);
+  background: rgba(34, 211, 238, 0.1);
+}
+
+html[data-theme="deep"] .nav__toggle {
+  border-color: var(--hairline);
+}
+
+html[data-theme="deep"] .nav__toggle span,
+html[data-theme="deep"] .nav__toggle span::before,
+html[data-theme="deep"] .nav__toggle span::after {
+  background: var(--ink);
+}
+
+html[data-theme="deep"] .nav__drawer {
+  background: rgba(7, 12, 24, 0.97);
+  border-top-color: var(--hairline);
+}
+
+html[data-theme="deep"] .nav__drawer a {
+  color: var(--ink-80);
+  border-bottom-color: var(--divider);
+}
+
+html[data-theme="deep"] .nav__drawer a[aria-current="page"] {
+  color: var(--cyan);
+}
+
+/* 强调按钮：青底 + 深墨字（浅底白字在青上对比度不足） */
+html[data-theme="deep"] .btn--primary {
+  background: var(--cyan);
+  color: #041018;
+}
+
+html[data-theme="deep"] .btn--primary:hover {
+  background: #67e8f9;
+}
+
+html[data-theme="deep"] .btn--ghost {
+  color: var(--ink-80);
+  border-color: rgba(203, 213, 225, 0.24);
+}
+
+html[data-theme="deep"] .btn--ghost:hover {
+  color: #ffffff;
+  border-color: var(--cyan);
+  background: rgba(34, 211, 238, 0.1);
+}
+
+html[data-theme="deep"] .text-link {
+  color: var(--cyan);
+}
+
+/* ==========================================================================
+   2. 首屏 · 深空场
+   ========================================================================== */
+
+html[data-theme="deep"] .hero {
+  background:
+    radial-gradient(ellipse 78% 58% at 50% -10%, rgba(34, 211, 238, 0.13), transparent 62%),
+    radial-gradient(ellipse 60% 42% at 82% 78%, rgba(56, 130, 246, 0.1), transparent 66%),
+    linear-gradient(180deg, #060b15 0%, #08111f 58%, #0b1526 100%);
+  color: var(--ink);
+  padding-block: clamp(84px, 12vw, 148px) clamp(84px, 12vw, 132px);
+}
+
+/* 静态底纹：保留极淡网格，给粒子当参照面 */
+html[data-theme="deep"] .hero::before {
+  background-image: linear-gradient(rgba(203, 213, 225, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(203, 213, 225, 0.05) 1px, transparent 1px);
+  background-size: 68px 68px;
+  mask-image: radial-gradient(ellipse 86% 66% at 50% 8%, #000 8%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 86% 66% at 50% 8%, #000 8%, transparent 78%);
+}
+
+/* 地平线辉光：让深空有「底面」 */
+html[data-theme="deep"] .hero::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -1px;
+  width: min(1100px, 92%);
+  height: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.5), transparent);
+  pointer-events: none;
+}
+
+/* 粒子网格 / 神经网络光线画布 */
+.fx-grid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+  pointer-events: none;
+}
+
+html[data-theme="deep"] .hero .eyebrow {
+  color: var(--cyan);
+}
+
+html[data-theme="deep"] .hero h1 {
+  text-shadow: 0 0 60px rgba(34, 211, 238, 0.18);
+}
+
+html[data-theme="deep"] .hero__sub {
+  color: var(--ink-60);
+}
+
+html[data-theme="deep"] .badge-row li {
+  background: rgba(203, 213, 225, 0.04);
+  border-color: var(--hairline);
+  color: var(--ink-48);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+
+/* ==========================================================================
+   3. 全息舱（首屏右侧核心视觉）
+   复用 .hero__visual 容器，交互动效由 hero-tech.js 驱动 canvas。
+   ========================================================================== */
+
+html[data-theme="deep"] .hero__visual.holo {
+  background:
+    radial-gradient(ellipse 62% 52% at 50% 40%, rgba(34, 211, 238, 0.1), transparent 68%),
+    linear-gradient(165deg, #0b1424 0%, #060c17 100%);
+  border-color: var(--cyan-hair);
+  box-shadow: inset 0 0 60px -18px rgba(34, 211, 238, 0.22),
+    0 30px 70px -50px rgba(34, 211, 238, 0.5);
+  padding: 0;
+  isolation: isolate;
+}
+
+/* CRT 扫描纹理：工业感，极淡 */
+html[data-theme="deep"] .hero__visual.holo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.028) 0px,
+    rgba(255, 255, 255, 0.028) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  border-radius: inherit;
+}
+
+/* 四角定位角标 */
+.holo__hud {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.holo__corner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--cyan-soft);
+  opacity: 0.75;
+}
+
+.holo__corner--tl {
+  top: 12px;
+  left: 12px;
+  border-right: 0;
+  border-bottom: 0;
+}
+
+.holo__corner--tr {
+  top: 12px;
+  right: 12px;
+  border-left: 0;
+  border-bottom: 0;
+}
+
+.holo__corner--bl {
+  bottom: 12px;
+  left: 12px;
+  border-right: 0;
+  border-top: 0;
+}
+
+.holo__corner--br {
+  bottom: 12px;
+  right: 12px;
+  border-left: 0;
+  border-top: 0;
+}
+
+/* 顶部状态行 */
+.holo__status {
+  position: absolute;
+  top: 16px;
+  left: 38px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(203, 213, 225, 0.62);
+}
+
+.holo__status i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.9);
+  animation: holoPulse 2.4s var(--ease) infinite;
+}
+
+/* 底部读数：三项能力，纯装饰 */
+.holo__specs {
+  position: absolute;
+  left: 38px;
+  right: 38px;
+  bottom: 16px;
+  display: flex;
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  color: rgba(203, 213, 225, 0.5);
+}
+
+.holo__specs {
+  flex-wrap: wrap;
+  row-gap: 4px;
+}
+
+.holo__specs li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.holo__specs li::before {
+  content: "";
+  width: 3px;
+  height: 3px;
+  background: var(--cyan-soft);
+}
+
+.holo__specs b {
+  font-weight: 500;
+  color: rgba(34, 211, 238, 0.85);
+}
+
+@keyframes holoPulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.78);
+  }
+}
+
+/* ==========================================================================
+   4. 页面装饰 · 角落扫描线与全息扫描光
+   固定层，pointer-events 全关，透明度压到刚好可见。
+   ========================================================================== */
+
+.fx-deco {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* 缓慢扫过的全息扫描光 */
+.fx-deco__sweep {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 34vh;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(34, 211, 238, 0.035) 42%,
+    rgba(34, 211, 238, 0.075) 50%,
+    rgba(34, 211, 238, 0.035) 58%,
+    transparent 100%
+  );
+  will-change: transform;
+  animation: fxSweep 16s linear infinite;
+}
+
+@keyframes fxSweep {
+  0% {
+    transform: translate3d(0, -40vh, 0);
+  }
+  100% {
+    transform: translate3d(0, 118vh, 0);
+  }
+}
+
+/* 四角扫描线 */
+.fx-deco__corner {
+  position: absolute;
+  top: 78px;
+  left: 18px;
+  width: 42px;
+  height: 42px;
+  opacity: 0.5;
+}
+
+.fx-deco__corner::before,
+.fx-deco__corner::after {
+  content: "";
+  position: absolute;
+  background: linear-gradient(90deg, var(--cyan-soft), transparent);
+}
+
+.fx-deco__corner::before {
+  height: 1px;
+  width: 100%;
+  top: 0;
+}
+
+.fx-deco__corner::after {
+  width: 1px;
+  height: 100%;
+  left: 0;
+  background: linear-gradient(180deg, var(--cyan-soft), transparent);
+}
+
+.fx-deco__corner--tr {
+  top: 78px;
+  right: 18px;
+  transform: rotate(90deg);
+}
+
+.fx-deco__corner--bl {
+  bottom: 18px;
+  left: 18px;
+  transform: rotate(-90deg);
+}
+
+.fx-deco__corner--br {
+  bottom: 18px;
+  right: 18px;
+  transform: rotate(180deg);
+}
+
+/* ==========================================================================
+   5. 分区底色与分隔
+   ========================================================================== */
+
+html[data-theme="deep"] .section--parchment {
+  background: var(--parchment);
+}
+
+html[data-theme="deep"] .section--pearl {
+  background: var(--pearl);
+}
+
+html[data-theme="deep"] .section--dark {
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(34, 211, 238, 0.07), transparent 64%),
+    var(--black);
+  color: var(--ink);
+}
+
+html[data-theme="deep"] .section--hairline-top {
+  border-top-color: var(--hairline);
+}
+
+html[data-theme="deep"] .eyebrow {
+  color: var(--cyan);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+}
+
+html[data-theme="deep"] .lead {
+  color: var(--ink-60);
+}
+
+html[data-theme="deep"] .muted {
+  color: var(--ink-48);
+}
+
+/* 关键数据 */
+html[data-theme="deep"] .stats {
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-lg);
+  background: linear-gradient(180deg, rgba(19, 29, 51, 0.6), rgba(12, 19, 36, 0.35));
+  padding: var(--sp-xl) var(--sp-lg);
+}
+
+html[data-theme="deep"] .stat__num {
+  color: var(--ink);
+}
+
+html[data-theme="deep"] .stat__label {
+  color: var(--ink-48);
+}
+
+html[data-theme="deep"] .divider {
+  background: var(--hairline);
+}
+
+/* ==========================================================================
+   6. 卡片 · 悬浮微动 + 青色光边
+   ========================================================================== */
+
+html[data-theme="deep"] .card {
+  position: relative;
+  background: var(--panel);
+  border-color: var(--hairline);
+  transition: border-color 0.4s var(--ease), box-shadow 0.4s var(--ease),
+    transform 0.4s var(--ease-out), background-color 0.4s var(--ease);
+}
+
+html[data-theme="deep"] .card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(203, 213, 225, 0.07), transparent 42%);
+  opacity: 0.9;
+}
+
+/* 缓慢上下浮动：用独立 translate 属性，不和 hover 的 transform 打架 */
+html[data-theme="deep"] .card--float {
+  animation: cardFloat 8s var(--ease) infinite;
+}
+
+html[data-theme="deep"] .card--float:nth-child(2) {
+  animation-delay: -2.6s;
+}
+
+html[data-theme="deep"] .card--float:nth-child(3) {
+  animation-delay: -5.2s;
+}
+
+@keyframes cardFloat {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -4px;
+  }
+}
+
+/* 悬浮：抬起 + 边缘亮起淡青光
+   注意：.section--dark .card 的基础边框规则在本文件位置更靠后且选择性同分，
+   所以深色分区变体必须一并列出，否则边框会被覆盖回去。 */
+html[data-theme="deep"] .card:hover,
+html[data-theme="deep"] .card--link:hover,
+html[data-theme="deep"] .section--dark .card:hover,
+html[data-theme="deep"] .section--tile .card:hover {
+  border-color: rgba(34, 211, 238, 0.48);
+  transform: translateY(-4px);
+  box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.16),
+    0 22px 48px -26px rgba(34, 211, 238, 0.42),
+    inset 0 0 34px -18px rgba(34, 211, 238, 0.4);
+  animation-play-state: paused;
+}
+
+html[data-theme="deep"] .card h3 {
+  color: var(--ink);
+}
+
+html[data-theme="deep"] .card p {
+  color: var(--ink-60);
+}
+
+html[data-theme="deep"] .card__icon {
+  background: rgba(34, 211, 238, 0.1);
+  color: var(--cyan);
+  border: 1px solid var(--cyan-faint);
+}
+
+html[data-theme="deep"] .card__tags li {
+  background: rgba(203, 213, 225, 0.07);
+  color: var(--ink-60);
+}
+
+html[data-theme="deep"] .section--dark .card {
+  background: var(--panel);
+  border-color: var(--hairline);
+}
+
+html[data-theme="deep"] .section--dark .card__icon {
+  background: rgba(34, 211, 238, 0.1);
+  color: var(--cyan);
+}
+
+html[data-theme="deep"] .bullets li {
+  color: var(--ink-60);
+}
+
+/* ==========================================================================
+   7. 能力矩阵条 / 新闻列表
+   ========================================================================== */
+
+html[data-theme="deep"] .cap-row {
+  border-top-color: var(--hairline);
+}
+
+html[data-theme="deep"] .cap-row__label {
+  color: var(--cyan);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+}
+
+html[data-theme="deep"] .cap-row__body h3 {
+  color: var(--ink);
+}
+
+html[data-theme="deep"] .cap-row__body p {
+  color: var(--ink-48);
+}
+
+html[data-theme="deep"] .news-item {
+  border-top-color: var(--hairline);
+}
+
+html[data-theme="deep"] .news-item__title {
+  color: var(--ink);
+}
+
+html[data-theme="deep"] .news-item__date,
+html[data-theme="deep"] .news-item__desc {
+  color: var(--ink-48);
+}
+
+html[data-theme="deep"] .news-item__cat {
+  background: rgba(34, 211, 238, 0.1);
+  color: var(--cyan);
+}
+
+html[data-theme="deep"] .news-item__link:hover .news-item__title {
+  color: var(--cyan);
+}
+
+/* ==========================================================================
+   8. 三层架构图（已从首屏迁入「我们在做什么」）
+   ========================================================================== */
+
+.arch-panel {
+  /* 收窄成一块居中图纸板：SVG viewBox 是 460 宽，
+     若放任它铺满 1120 容器会被放大到 2.2 倍，内嵌标签字号会盖过正文。 */
+  max-width: 840px;
+  margin-inline: auto;
+  margin-bottom: var(--sp-xxl);
+  border: 1px solid var(--cyan-faint);
+  border-radius: var(--r-lg);
+  background: linear-gradient(180deg, rgba(19, 29, 51, 0.72), rgba(9, 15, 28, 0.5));
+  padding: clamp(20px, 3vw, 34px);
+  overflow: hidden;
+}
+
+.arch-panel svg {
+  width: 100%;
+  max-width: 520px;
+  height: auto;
+  margin-inline: auto;
+}
+
+/* ==========================================================================
+   9. CTA 与页脚
+   ========================================================================== */
+
+html[data-theme="deep"] .cta {
+  background:
+    radial-gradient(ellipse 62% 130% at 12% 50%, rgba(34, 211, 238, 0.16), transparent 68%),
+    linear-gradient(180deg, #0c1428 0%, #080e1c 100%);
+  color: var(--ink);
+  border-top: 1px solid var(--cyan-faint);
+  border-bottom: 1px solid var(--cyan-faint);
+}
+
+html[data-theme="deep"] .cta h2 {
+  color: var(--ink);
+}
+
+html[data-theme="deep"] .cta p {
+  color: var(--ink-60);
+}
+
+html[data-theme="deep"] .cta .btn--primary {
+  background: var(--cyan);
+  color: #041018;
+}
+
+html[data-theme="deep"] .cta .btn--primary:hover {
+  background: #67e8f9;
+}
+
+html[data-theme="deep"] .cta .btn--ghost {
+  color: var(--ink-80);
+  border-color: rgba(203, 213, 225, 0.3);
+}
+
+html[data-theme="deep"] .cta .btn--ghost:hover {
+  color: #ffffff;
+  border-color: var(--cyan);
+  background: rgba(34, 211, 238, 0.1);
+}
+
+html[data-theme="deep"] .footer {
+  background: var(--black);
+  border-top-color: var(--hairline);
+}
+
+html[data-theme="deep"] .footer h4 {
+  color: var(--ink-80);
+}
+
+html[data-theme="deep"] .footer__brand p,
+html[data-theme="deep"] .footer ul a,
+html[data-theme="deep"] .footer ul li,
+html[data-theme="deep"] .footer__bottom {
+  color: var(--ink-48);
+}
+
+html[data-theme="deep"] .footer ul a:hover {
+  color: var(--cyan);
+}
+
+/* ==========================================================================
+   10. 滚动出现 · 错峰
+   基础 reveal 由 site.css 提供，这里只给网格内元素加阶梯延迟。
+   ========================================================================== */
+
+html[data-theme="deep"] .grid > .reveal:nth-child(1) {
+  transition-delay: 0ms;
+}
+
+html[data-theme="deep"] .grid > .reveal:nth-child(2) {
+  transition-delay: 90ms;
+}
+
+html[data-theme="deep"] .grid > .reveal:nth-child(3) {
+  transition-delay: 180ms;
+}
+
+html[data-theme="deep"] .grid > .reveal:nth-child(4) {
+  transition-delay: 270ms;
+}
+
+html[data-theme="deep"] .cap-row.reveal:nth-child(2n) {
+  transition-delay: 60ms;
+}
+
+html[data-theme="deep"] .news-list.reveal {
+  transition-delay: 80ms;
+}
+
+/* ==========================================================================
+   11. 响应式
+   ========================================================================== */
+
+@media (max-width: 1000px) {
+  /* 视觉改到首屏上方时，别让全息舱在手机上顶得太高 */
+  html[data-theme="deep"] .hero--split .hero__visual {
+    aspect-ratio: 16 / 11;
+  }
+}
+
+@media (max-width: 820px) {
+  .fx-deco__corner {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  html[data-theme="deep"] .hero {
+    padding-block: 56px 64px;
+  }
+
+  .holo__status,
+  .holo__specs {
+    left: 26px;
+    right: 26px;
+    font-size: 9.5px;
+    letter-spacing: 0.08em;
+  }
+
+  .holo__specs {
+    gap: 12px;
+  }
+
+  html[data-theme="deep"] .stats {
+    padding: var(--sp-lg) var(--sp-md);
+  }
+}
+
+/* ==========================================================================
+   12. 降级与打印
+   ========================================================================== */
+
+/* 关闭动效偏好：停掉一切运动，但保留完整视觉
+   —— canvas 由 hero-tech.js 画一帧静态图，不跑循环 */
+@media (prefers-reduced-motion: reduce) {
+  .fx-deco {
+    display: none !important;
+  }
+
+  html[data-theme="deep"] .hero__visual.holo {
+    background:
+      radial-gradient(ellipse 62% 52% at 50% 40%, rgba(34, 211, 238, 0.12), transparent 68%),
+      linear-gradient(165deg, #0b1424 0%, #060c17 100%);
+  }
+
+  html[data-theme="deep"] .card--float {
+    animation: none;
+  }
+
+  .holo__status i {
+    animation: none;
+  }
+}
+
+/* 无 canvas 支持时，至少让全息舱不至于空着 */
+html.no-canvas .hero__visual.holo {
+  background:
+    radial-gradient(ellipse 58% 48% at 50% 42%, rgba(34, 211, 238, 0.14), transparent 70%),
+    linear-gradient(165deg, #0b1424 0%, #060c17 100%);
+}
+
+@media print {
+  .fx-deco,
+  .fx-grid {
+    display: none !important;
+  }
+
+  html[data-theme="deep"] .hero,
+  html[data-theme="deep"] .section--dark,
+  html[data-theme="deep"] .cta,
+  html[data-theme="deep"] .footer {
+    background: #fff !important;
+    color: #000 !important;
+  }
+}

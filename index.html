@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="deep">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -7,7 +7,8 @@
 <meta name="description" content="北京中盾数智科技有限公司是北京中盾领御机器人有限公司全资子公司，专注人工智能基础软件与应用软件、具身智能系统集成、数据处理与平台服务，为机器人本体与产业场景提供智能软件底座。">
 <meta name="keywords" content="中盾数智,北京中盾数智科技有限公司,具身智能,人工智能软件开发,系统集成,机器人软件,中盾领御机器人">
 <meta name="author" content="北京中盾数智科技有限公司">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#0F172A">
+<meta name="color-scheme" content="dark">
 <meta name="format-detection" content="telephone=no">
 <link rel="canonical" href="https://phoenix1983413.github.io/zhongdun-shuzhi/">
 
@@ -31,6 +32,8 @@
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 
 <link rel="stylesheet" href="assets/css/site.css">
+<!-- 首页专用「深空」主题层：只在首页加载，内页不受影响 -->
+<link rel="stylesheet" href="assets/css/tech.css">
 
 <script type="application/ld+json">
 {
@@ -69,6 +72,15 @@
 <body>
 
 <a class="skip-link" href="#main">跳到主要内容</a>
+
+<!-- 装饰层：缓慢扫过的全息扫描光 + 四角扫描线（纯装饰，不参与交互） -->
+<div class="fx-deco" aria-hidden="true">
+  <div class="fx-deco__sweep"></div>
+  <span class="fx-deco__corner"></span>
+  <span class="fx-deco__corner fx-deco__corner--tr"></span>
+  <span class="fx-deco__corner fx-deco__corner--bl"></span>
+  <span class="fx-deco__corner fx-deco__corner--br"></span>
+</div>
 
 <!-- ==================== 导航 ==================== -->
 <header class="nav">
@@ -112,6 +124,8 @@
 
   <!-- ==================== Hero ==================== -->
   <section class="hero hero--split">
+    <!-- 粒子网格 + 神经网络光线：由 hero-tech.js 绘制 -->
+    <canvas class="fx-grid" id="fxGrid" aria-hidden="true"></canvas>
     <div class="wrap hero__inner">
       <div>
         <span class="eyebrow">中盾领御机器人集团 · 智能软件板块</span>
@@ -130,64 +144,21 @@
         </ul>
       </div>
 
-      <div class="hero__visual" aria-hidden="true">
-        <!-- 三层能力架构示意 -->
-        <svg viewBox="0 0 460 336" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="bandHi" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0" stop-color="#2997FF" stop-opacity="0.20"/>
-              <stop offset="1" stop-color="#2997FF" stop-opacity="0.04"/>
-            </linearGradient>
-          </defs>
-
-          <!-- 场景应用层 -->
-          <rect x="20" y="24" width="420" height="76" rx="14" fill="#FFFFFF" fill-opacity="0.035" stroke="#FFFFFF" stroke-opacity="0.16"/>
-          <text x="38" y="48" fill="#7A7A7A" font-family="PingFang SC, Noto Sans SC, sans-serif" font-size="12" letter-spacing="1.6">场景应用层</text>
-          <g font-family="PingFang SC, Noto Sans SC, sans-serif" font-size="11.5" text-anchor="middle">
-            <rect x="38" y="62" width="90" height="26" rx="13" fill="#FFFFFF" fill-opacity="0.07"/>
-            <text x="83" y="79" fill="#D2D2D7">智能制造</text>
-            <rect x="134" y="62" width="90" height="26" rx="13" fill="#FFFFFF" fill-opacity="0.07"/>
-            <text x="179" y="79" fill="#D2D2D7">公共服务</text>
-            <rect x="230" y="62" width="90" height="26" rx="13" fill="#FFFFFF" fill-opacity="0.07"/>
-            <text x="275" y="79" fill="#D2D2D7">教育文体</text>
-            <rect x="326" y="62" width="90" height="26" rx="13" fill="#FFFFFF" fill-opacity="0.07"/>
-            <text x="371" y="79" fill="#D2D2D7">特种作业</text>
-          </g>
-
-          <path d="M230 100 V132" stroke="#2997FF" stroke-opacity="0.55" stroke-width="1.4"/>
-          <path d="M225 126 L230 132 L235 126" stroke="#2997FF" stroke-opacity="0.75" stroke-width="1.4" fill="none"/>
-
-          <!-- 智能中枢层 -->
-          <rect x="20" y="132" width="420" height="76" rx="14" fill="url(#bandHi)" stroke="#2997FF" stroke-opacity="0.42"/>
-          <text x="38" y="156" fill="#2997FF" font-family="PingFang SC, Noto Sans SC, sans-serif" font-size="12" letter-spacing="1.6">智能中枢层</text>
-          <g font-family="PingFang SC, Noto Sans SC, sans-serif" font-size="11.5" text-anchor="middle">
-            <rect x="38" y="170" width="90" height="26" rx="13" fill="#2997FF" fill-opacity="0.16"/>
-            <text x="83" y="187" fill="#FFFFFF">多模态感知</text>
-            <rect x="134" y="170" width="90" height="26" rx="13" fill="#2997FF" fill-opacity="0.16"/>
-            <text x="179" y="187" fill="#FFFFFF">决策规划</text>
-            <rect x="230" y="170" width="90" height="26" rx="13" fill="#2997FF" fill-opacity="0.16"/>
-            <text x="275" y="187" fill="#FFFFFF">人机交互</text>
-            <rect x="326" y="170" width="90" height="26" rx="13" fill="#2997FF" fill-opacity="0.16"/>
-            <text x="371" y="187" fill="#FFFFFF">数据闭环</text>
-          </g>
-
-          <path d="M230 208 V240" stroke="#2997FF" stroke-opacity="0.55" stroke-width="1.4"/>
-          <path d="M225 234 L230 240 L235 234" stroke="#2997FF" stroke-opacity="0.75" stroke-width="1.4" fill="none"/>
-
-          <!-- 本体与硬件层 -->
-          <rect x="20" y="240" width="420" height="76" rx="14" fill="#FFFFFF" fill-opacity="0.035" stroke="#FFFFFF" stroke-opacity="0.16"/>
-          <text x="38" y="264" fill="#7A7A7A" font-family="PingFang SC, Noto Sans SC, sans-serif" font-size="12" letter-spacing="1.6">本体与硬件层</text>
-          <g font-family="PingFang SC, Noto Sans SC, sans-serif" font-size="11.5" text-anchor="middle">
-            <rect x="38" y="278" width="90" height="26" rx="13" fill="#FFFFFF" fill-opacity="0.07"/>
-            <text x="83" y="295" fill="#D2D2D7">机器人本体</text>
-            <rect x="134" y="278" width="90" height="26" rx="13" fill="#FFFFFF" fill-opacity="0.07"/>
-            <text x="179" y="295" fill="#D2D2D7">传感器</text>
-            <rect x="230" y="278" width="90" height="26" rx="13" fill="#FFFFFF" fill-opacity="0.07"/>
-            <text x="275" y="295" fill="#D2D2D7">执行机构</text>
-            <rect x="326" y="278" width="90" height="26" rx="13" fill="#FFFFFF" fill-opacity="0.07"/>
-            <text x="371" y="295" fill="#D2D2D7">边缘算力</text>
-          </g>
-        </svg>
+      <div class="hero__visual holo" aria-hidden="true">
+        <!-- 全息人形机器人线框：由 hero-tech.js 在 canvas 上绘制 -->
+        <canvas id="fxRobot"></canvas>
+        <div class="holo__hud">
+          <span class="holo__corner holo__corner--tl"></span>
+          <span class="holo__corner holo__corner--tr"></span>
+          <span class="holo__corner holo__corner--bl"></span>
+          <span class="holo__corner holo__corner--br"></span>
+          <div class="holo__status"><i></i>EMBODIED AI · 线框示意</div>
+          <ul class="holo__specs">
+            <li><b>感知</b>多模态融合</li>
+            <li><b>决策</b>任务规划</li>
+            <li><b>交互</b>人机协同</li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>
@@ -228,7 +199,68 @@
         </p>
       </div>
 
-      <div class="grid grid--3">
+            <!-- 三层能力架构示意：自首屏迁入，放在此处更贴合信息层级 -->
+      <div class="arch-panel reveal" role="img"
+           aria-label="中盾数智三层能力结构：场景应用层、智能中枢层、本体与硬件层">
+  <svg viewBox="0 0 460 336" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bandHi" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#22D3EE" stop-opacity="0.20"/>
+                <stop offset="1" stop-color="#22D3EE" stop-opacity="0.04"/>
+              </linearGradient>
+            </defs>
+
+            <!-- 场景应用层 -->
+            <rect x="20" y="24" width="420" height="76" rx="14" fill="#FFFFFF" fill-opacity="0.035" stroke="#FFFFFF" stroke-opacity="0.16"/>
+            <text x="38" y="48" fill="#94A3B8" font-family="PingFang SC, Noto Sans SC, sans-serif" font-size="12" letter-spacing="1.6">场景应用层</text>
+            <g font-family="PingFang SC, Noto Sans SC, sans-serif" font-size="11.5" text-anchor="middle">
+              <rect x="38" y="62" width="90" height="26" rx="13" fill="#FFFFFF" fill-opacity="0.07"/>
+              <text x="83" y="79" fill="#CBD5E1">智能制造</text>
+              <rect x="134" y="62" width="90" height="26" rx="13" fill="#FFFFFF" fill-opacity="0.07"/>
+              <text x="179" y="79" fill="#CBD5E1">公共服务</text>
+              <rect x="230" y="62" width="90" height="26" rx="13" fill="#FFFFFF" fill-opacity="0.07"/>
+              <text x="275" y="79" fill="#CBD5E1">教育文体</text>
+              <rect x="326" y="62" width="90" height="26" rx="13" fill="#FFFFFF" fill-opacity="0.07"/>
+              <text x="371" y="79" fill="#CBD5E1">特种作业</text>
+            </g>
+
+            <path d="M230 100 V132" stroke="#22D3EE" stroke-opacity="0.55" stroke-width="1.4"/>
+            <path d="M225 126 L230 132 L235 126" stroke="#22D3EE" stroke-opacity="0.75" stroke-width="1.4" fill="none"/>
+
+            <!-- 智能中枢层 -->
+            <rect x="20" y="132" width="420" height="76" rx="14" fill="url(#bandHi)" stroke="#22D3EE" stroke-opacity="0.42"/>
+            <text x="38" y="156" fill="#22D3EE" font-family="PingFang SC, Noto Sans SC, sans-serif" font-size="12" letter-spacing="1.6">智能中枢层</text>
+            <g font-family="PingFang SC, Noto Sans SC, sans-serif" font-size="11.5" text-anchor="middle">
+              <rect x="38" y="170" width="90" height="26" rx="13" fill="#22D3EE" fill-opacity="0.16"/>
+              <text x="83" y="187" fill="#FFFFFF">多模态感知</text>
+              <rect x="134" y="170" width="90" height="26" rx="13" fill="#22D3EE" fill-opacity="0.16"/>
+              <text x="179" y="187" fill="#FFFFFF">决策规划</text>
+              <rect x="230" y="170" width="90" height="26" rx="13" fill="#22D3EE" fill-opacity="0.16"/>
+              <text x="275" y="187" fill="#FFFFFF">人机交互</text>
+              <rect x="326" y="170" width="90" height="26" rx="13" fill="#22D3EE" fill-opacity="0.16"/>
+              <text x="371" y="187" fill="#FFFFFF">数据闭环</text>
+            </g>
+
+            <path d="M230 208 V240" stroke="#22D3EE" stroke-opacity="0.55" stroke-width="1.4"/>
+            <path d="M225 234 L230 240 L235 234" stroke="#22D3EE" stroke-opacity="0.75" stroke-width="1.4" fill="none"/>
+
+            <!-- 本体与硬件层 -->
+            <rect x="20" y="240" width="420" height="76" rx="14" fill="#FFFFFF" fill-opacity="0.035" stroke="#FFFFFF" stroke-opacity="0.16"/>
+            <text x="38" y="264" fill="#94A3B8" font-family="PingFang SC, Noto Sans SC, sans-serif" font-size="12" letter-spacing="1.6">本体与硬件层</text>
+            <g font-family="PingFang SC, Noto Sans SC, sans-serif" font-size="11.5" text-anchor="middle">
+              <rect x="38" y="278" width="90" height="26" rx="13" fill="#FFFFFF" fill-opacity="0.07"/>
+              <text x="83" y="295" fill="#CBD5E1">机器人本体</text>
+              <rect x="134" y="278" width="90" height="26" rx="13" fill="#FFFFFF" fill-opacity="0.07"/>
+              <text x="179" y="295" fill="#CBD5E1">传感器</text>
+              <rect x="230" y="278" width="90" height="26" rx="13" fill="#FFFFFF" fill-opacity="0.07"/>
+              <text x="275" y="295" fill="#CBD5E1">执行机构</text>
+              <rect x="326" y="278" width="90" height="26" rx="13" fill="#FFFFFF" fill-opacity="0.07"/>
+              <text x="371" y="295" fill="#CBD5E1">边缘算力</text>
+            </g>
+          </svg>
+      </div>
+
+<div class="grid grid--3">
         <article class="card reveal">
           <div class="card__icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
@@ -280,7 +312,7 @@
       </div>
 
       <div class="grid grid--2">
-        <article class="card reveal">
+        <article class="card card--float reveal">
           <span class="eyebrow">硬件 · 本体</span>
           <h3 class="h-md">北京中盾领御机器人有限公司</h3>
           <p class="mt-md">
@@ -295,7 +327,7 @@
           </ul>
         </article>
 
-        <article class="card reveal">
+        <article class="card card--float reveal">
           <span class="eyebrow">软件 · 智能</span>
           <h3 class="h-md">北京中盾数智科技有限公司</h3>
           <p class="mt-md">
@@ -529,5 +561,6 @@
 </footer>
 
 <script src="assets/js/site.js" defer></script>
+<script src="assets/js/hero-tech.js" defer></script>
 </body>
 </html>
