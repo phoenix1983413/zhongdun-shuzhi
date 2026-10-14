@@ -184,13 +184,13 @@
       requestAnimationFrame(render);
 
       if (modelRef) {
-        // 入场缓动
+        // 入场缓动 - 最终位置下沉到 y=-0.6
         if (animatingIn) {
-          modelRef.position.y += (0 - modelRef.position.y) * 0.06;
+          modelRef.position.y += (-0.6 - modelRef.position.y) * 0.06;
           var s = modelRef.scale.x;
           var ns = s + (targetScale - s) * 0.06;
           modelRef.scale.setScalar(ns);
-          if (Math.abs(modelRef.position.y) < 0.001 && Math.abs(ns - targetScale) < 0.001) {
+          if (Math.abs(modelRef.position.y + 0.6) < 0.001 && Math.abs(ns - targetScale) < 0.001) {
             animatingIn = false;
           }
         }
