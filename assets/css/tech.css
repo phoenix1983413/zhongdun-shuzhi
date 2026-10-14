@@ -262,13 +262,8 @@ html[data-theme="deep"] .hero__visual.holo::after {
   inset: 0;
   z-index: 3;
   pointer-events: none;
-  background: repeating-linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.028) 0px,
-    rgba(255, 255, 255, 0.028) 1px,
-    transparent 1px,
-    transparent 3px
-  );
+  /* 移除 CRT 扫描横线纹理，避免与 3D 扫描效果冲突 */
+  background: none;
   border-radius: inherit;
 }
 
