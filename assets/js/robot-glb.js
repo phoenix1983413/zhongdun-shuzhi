@@ -52,8 +52,8 @@
 
     // 相机：透视，略俯视，确保模型完整居中
     var camera = new THREE.PerspectiveCamera(45, container.clientWidth / Math.max(1, container.clientHeight), 0.1, 1000);
-    camera.position.set(0, -1.0, 5.5); // 相机降到模型下方
-    camera.lookAt(0, 0.5, 0); // 往上看，模型在画面中更靠下
+    camera.position.set(0, -27, 9); // 相机在模型后上方，俯视
+    camera.lookAt(0, -28.5, 0); // 看向模型中心
 
     // 渲染器：透明背景，与深色背景融合
     var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -80,7 +80,7 @@
 
     // 底部补光：增强全息底座光晕
     var bottomLight = new THREE.PointLight(0x22d3ee, 1.5, 6);
-    bottomLight.position.set(0, -4.5, 0); // 跟随模型下沉
+    bottomLight.position.set(0, -30.0, 0); // 跟随模型下沉
     scene.add(bottomLight);
 
     // ---- 地面反射光圈（装饰）----
@@ -88,7 +88,7 @@
     var ringMat = new THREE.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0.15, side: THREE.DoubleSide });
     var ring = new THREE.Mesh(ringGeo, ringMat);
     ring.rotation.x = -Math.PI / 2;
-    ring.position.y = -4.0; // 模型底部下方
+    ring.position.y = -29.0; // 模型底部下方
     scene.add(ring);
 
     // ---- 全息扫描环（增强版：多层光效 + 动态光点）----
@@ -136,20 +136,20 @@
       function (gltf) {
         var model = gltf.scene;
 
-        // 自动缩放：把模型高度归一到约 3.2 单位（比原来大 1/3）
+        // 自动缩放：比原始尺寸大约 1/3
         var box = new THREE.Box3().setFromObject(model);
         var size = box.getSize(new THREE.Vector3());
         var maxDim = Math.max(size.x, size.y, size.z);
-        var targetHeight = 3.2;
+        var targetHeight = 5.0;
         var scale = maxDim > 0 ? targetHeight / maxDim : 1;
         model.scale.setScalar(scale);
 
-        // 居中：底部对齐到 y=-3.5，整体大幅下沉
+        // 居中：底部对齐到 y=-30.5，整体大幅下沉
         box.setFromObject(model);
         var center = box.getCenter(new THREE.Vector3());
         model.position.x = -center.x;
         model.position.z = -center.z;
-        model.position.y = -box.min.y - 3.5; // 底部对齐后再下沉 3.5 单位
+        model.position.y = -box.min.y - 30.5; // 底部对齐后再下沉 30.5 单位
 
         scene.add(model);
 
@@ -204,7 +204,7 @@
 
       // ---- 全息扫描环动画（增强版 + 呼吸光效）----
       var scanProg = (Date.now() * 0.00006) % 1; // 加快扫描速度
-      var scanY = -3.5 + scanProg * 3.5; // 从模型底部(-3.5)扫到顶部(0)
+      var scanY = -28.5 + scanProg * 3.5; // 从模型底部(-28.5)扫到顶部(-25.0)
       
       // 主扫描环：更亮更明显
       var mainAlpha = Math.sin(scanProg * Math.PI) * 0.7;
@@ -215,7 +215,7 @@
       // 副扫描环：延迟扩散
       var scanProg2 = ((Date.now() * 0.00006 - 0.05) % 1);
       if (scanProg2 < 0) scanProg2 += 1;
-      var scanY2 = -3.5 + scanProg2 * 3.5; // 同步调整范围
+      var scanY2 = -28.5 + scanProg2 * 3.5; // 同步调整范围
       var ring2Alpha = Math.sin(scanProg2 * Math.PI) * 0.3;
       scanRing2.position.y = scanY2;
       scanRing2.material.opacity = ring2Alpha;
