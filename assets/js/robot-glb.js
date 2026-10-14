@@ -80,7 +80,7 @@
 
     // 底部补光：增强全息底座光晕
     var bottomLight = new THREE.PointLight(0x22d3ee, 1.5, 6);
-    bottomLight.position.set(0, -1.5, 0);
+    bottomLight.position.set(0, -3.5, 0); // 跟随模型下沉
     scene.add(bottomLight);
 
     // ---- 地面反射光圈（装饰）----
@@ -88,7 +88,7 @@
     var ringMat = new THREE.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0.15, side: THREE.DoubleSide });
     var ring = new THREE.Mesh(ringGeo, ringMat);
     ring.rotation.x = -Math.PI / 2;
-    ring.position.y = -1.2;
+    ring.position.y = -2.5; // 跟随模型下沉
     scene.add(ring);
 
     // ---- 全息扫描环（增强版：多层光效 + 动态光点）----
@@ -184,13 +184,13 @@
       requestAnimationFrame(render);
 
       if (modelRef) {
-        // 入场缓动 - 最终位置下沉到 y=-1.2
+        // 入场缓动 - 最终位置下沉到 y=-2.0
         if (animatingIn) {
-          modelRef.position.y += (-1.2 - modelRef.position.y) * 0.06;
+          modelRef.position.y += (-2.0 - modelRef.position.y) * 0.06;
           var s = modelRef.scale.x;
           var ns = s + (targetScale - s) * 0.06;
           modelRef.scale.setScalar(ns);
-          if (Math.abs(modelRef.position.y + 1.2) < 0.001 && Math.abs(ns - targetScale) < 0.001) {
+          if (Math.abs(modelRef.position.y + 2.0) < 0.001 && Math.abs(ns - targetScale) < 0.001) {
             animatingIn = false;
           }
         }
@@ -201,7 +201,7 @@
 
       // ---- 全息扫描环动画（增强版 + 呼吸光效）----
       var scanProg = (Date.now() * 0.00006) % 1; // 加快扫描速度
-      var scanY = -0.4 + scanProg * 3.2; // 扩大扫描范围
+      var scanY = -1.2 + scanProg * 3.5; // 扩大扫描范围，覆盖下沉后的模型
       
       // 主扫描环：更亮更明显
       var mainAlpha = Math.sin(scanProg * Math.PI) * 0.7;
@@ -212,7 +212,7 @@
       // 副扫描环：延迟扩散
       var scanProg2 = ((Date.now() * 0.00006 - 0.05) % 1);
       if (scanProg2 < 0) scanProg2 += 1;
-      var scanY2 = -0.4 + scanProg2 * 3.2;
+      var scanY2 = -1.2 + scanProg2 * 3.5; // 扩大扫描范围
       var ring2Alpha = Math.sin(scanProg2 * Math.PI) * 0.3;
       scanRing2.position.y = scanY2;
       scanRing2.material.opacity = ring2Alpha;
