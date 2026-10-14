@@ -32,7 +32,10 @@
     });
   }
 
-  Promise.all([loadScript(SCRIPT), loadScript(LOADER)]).then(function () {
+  // 顺序加载：先 THREE，再 GLTFLoader（后者依赖前者挂到全局）
+  loadScript(SCRIPT).then(function () {
+    return loadScript(LOADER);
+  }).then(function () {
     initRobot();
   }).catch(function (err) {
     console.warn("[RobotGLB] Three.js 加载失败，回退到 canvas 2D:", err);
