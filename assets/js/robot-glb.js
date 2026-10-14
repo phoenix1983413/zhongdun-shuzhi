@@ -18,9 +18,9 @@
     return;
   }
 
-  // ---- Three.js CDN（动态加载，避免阻塞首屏）----
-  var SCRIPT = "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js";
-  var LOADER = "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/loaders/GLTFLoader.js";
+  // Three.js r148（最后一个支持 examples/js/ 非 ESM 加载器的版本）
+  var SCRIPT = "https://cdn.jsdelivr.net/npm/three@0.148.0/build/three.min.js";
+  var LOADER = "https://cdn.jsdelivr.net/npm/three@0.148.0/examples/js/loaders/GLTFLoader.js";
 
   function loadScript(url) {
     return new Promise(function (resolve, reject) {
