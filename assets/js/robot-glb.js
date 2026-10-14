@@ -50,10 +50,10 @@
     // ---- 场景 ----
     var scene = new THREE.Scene();
 
-    // 相机：透视，略俯视
+    // 相机：透视，略俯视，确保模型完整居中
     var camera = new THREE.PerspectiveCamera(45, container.clientWidth / Math.max(1, container.clientHeight), 0.1, 1000);
-    camera.position.set(0, 1.2, 4.5);
-    camera.lookAt(0, 0.5, 0);
+    camera.position.set(0, 1.6, 5.5);
+    camera.lookAt(0, 1.1, 0);
 
     // 渲染器：透明背景，与深色背景融合
     var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -85,6 +85,19 @@
     ring.rotation.x = -Math.PI / 2;
     ring.position.y = -1.2;
     scene.add(ring);
+
+    // ---- 全息扫描环（替代原 2D canvas 的扫描光效）----
+    var scanRingGeo = new THREE.TorusGeometry(1.15, 0.018, 8, 80);
+    var scanRingMat = new THREE.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0 });
+    var scanRing = new THREE.Mesh(scanRingGeo, scanRingMat);
+    scanRing.rotation.x = Math.PI / 2; // 水平放置
+    scene.add(scanRing);
+
+    // 扫描光幕：半透明平面，营造体积光感
+    var scanPlaneGeo = new THREE.PlaneGeometry(2.8, 0.08);
+    var scanPlaneMat = new THREE.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0, side: THREE.DoubleSide });
+    var scanPlane = new THREE.Mesh(scanPlaneGeo, scanPlaneMat);
+    scene.add(scanPlane);
 
     // ---- 加载 GLB ----
     var loader = new THREE.GLTFLoader();
@@ -157,6 +170,15 @@
         // 缓慢自转
         modelRef.rotation.y += 0.004;
       }
+
+      // ---- 全息扫描环动画 ----
+      var scanProg = (Date.now() * 0.00004) % 1;
+      var scanY = -0.2 + scanProg * 2.8;
+      var scanAlpha = Math.sin(scanProg * Math.PI) * 0.55;
+      scanRing.position.y = scanY;
+      scanRing.material.opacity = scanAlpha;
+      scanPlane.position.y = scanY;
+      scanPlane.material.opacity = scanAlpha * 0.35;
 
       renderer.render(scene, camera);
     }
