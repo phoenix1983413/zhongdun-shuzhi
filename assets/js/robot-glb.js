@@ -154,9 +154,10 @@
         scene.add(model);
 
         // 入场动画：从略下方浮起到最终位置
+        var finalY = model.position.y; // 记录最终位置
         model.position.y -= 0.3;
         model.scale.setScalar(scale * 0.95);
-        animateIn(model, scale);
+        animateIn(model, scale, finalY);
       },
       function (xhr) {
         if (xhr.lengthComputable) {
@@ -171,11 +172,13 @@
 
     var modelRef = null;
     var targetScale = 1;
+    var targetY = 0;
     var animatingIn = true;
 
-    function animateIn(model, finalScale) {
+    function animateIn(model, finalScale, finalY) {
       modelRef = model;
       targetScale = finalScale;
+      targetY = finalY;
       animatingIn = true;
     }
 
@@ -186,11 +189,11 @@
       if (modelRef) {
         // 入场缓动 - 回到加载后的最终位置
         if (animatingIn) {
-          modelRef.position.y += (0 - modelRef.position.y) * 0.06;
+          modelRef.position.y += (targetY - modelRef.position.y) * 0.06;
           var s = modelRef.scale.x;
           var ns = s + (targetScale - s) * 0.06;
           modelRef.scale.setScalar(ns);
-          if (Math.abs(modelRef.position.y) < 0.001 && Math.abs(ns - targetScale) < 0.001) {
+          if (Math.abs(modelRef.position.y - targetY) < 0.001 && Math.abs(ns - targetScale) < 0.001) {
             animatingIn = false;
           }
         }
