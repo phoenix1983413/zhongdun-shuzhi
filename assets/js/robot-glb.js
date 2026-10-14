@@ -52,8 +52,8 @@
 
     // 相机：透视，略俯视，确保模型完整居中
     var camera = new THREE.PerspectiveCamera(45, container.clientWidth / Math.max(1, container.clientHeight), 0.1, 1000);
-    camera.position.set(0, 0.6, 5.5); // 大幅降低相机高度
-    camera.lookAt(0, 0.3, 0); // 视角目标也降低，模型在画面中更靠下
+    camera.position.set(0, 0.2, 5.5); // 相机降到更低位置
+    camera.lookAt(0, -0.1, 0); // 视角目标更低，模型在画面中更靠下
 
     // 渲染器：透明背景，与深色背景融合
     var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -184,13 +184,13 @@
       requestAnimationFrame(render);
 
       if (modelRef) {
-        // 入场缓动 - 最终位置下沉到 y=-0.6
+        // 入场缓动 - 最终位置下沉到 y=-1.2
         if (animatingIn) {
-          modelRef.position.y += (-0.6 - modelRef.position.y) * 0.06;
+          modelRef.position.y += (-1.2 - modelRef.position.y) * 0.06;
           var s = modelRef.scale.x;
           var ns = s + (targetScale - s) * 0.06;
           modelRef.scale.setScalar(ns);
-          if (Math.abs(modelRef.position.y + 0.6) < 0.001 && Math.abs(ns - targetScale) < 0.001) {
+          if (Math.abs(modelRef.position.y + 1.2) < 0.001 && Math.abs(ns - targetScale) < 0.001) {
             animatingIn = false;
           }
         }
