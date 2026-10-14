@@ -6,7 +6,8 @@
 (function () {
   "use strict";
 
-  var container = document.getElementById("fxRobot");
+  var container = document.getElementById("robot3d");
+  if (!container) container = document.getElementById("fxRobot");
   if (!container) return;
 
   // 如果设备不支持 WebGL，静默失败，不影响其余动效
