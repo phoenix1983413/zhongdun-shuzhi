@@ -53,7 +53,7 @@
     // 相机：透视，略俯视，确保模型完整居中
     var camera = new THREE.PerspectiveCamera(45, container.clientWidth / Math.max(1, container.clientHeight), 0.1, 1000);
     camera.position.set(0, 1.6, 5.5);
-    camera.lookAt(0, 1.1, 0);
+    camera.lookAt(0, 0.3, 0); // 降低视角，让模型在画面中位置更低
 
     // 渲染器：透明背景，与深色背景融合
     var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -105,12 +105,6 @@
     var scanRing2 = new THREE.Mesh(scanRing2Geo, scanRing2Mat);
     scanRing2.rotation.x = Math.PI / 2;
     scene.add(scanRing2);
-
-    // 扫描光幕：加宽，增强体积光感
-    var scanPlaneGeo = new THREE.PlaneGeometry(3.2, 0.12);
-    var scanPlaneMat = new THREE.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0, side: THREE.DoubleSide });
-    var scanPlane = new THREE.Mesh(scanPlaneGeo, scanPlaneMat);
-    scene.add(scanPlane);
 
     // 扫描光点 - 跟随扫描环移动的高亮粒子
     var scanDotGeo = new THREE.SphereGeometry(0.04, 8, 8);
@@ -205,7 +199,7 @@
         modelRef.rotation.y += 0.004;
       }
 
-      // ---- 全息扫描环动画（增强版）----
+      // ---- 全息扫描环动画（增强版 + 呼吸光效）----
       var scanProg = (Date.now() * 0.00006) % 1; // 加快扫描速度
       var scanY = -0.4 + scanProg * 3.2; // 扩大扫描范围
       
@@ -224,10 +218,6 @@
       scanRing2.material.opacity = ring2Alpha;
       scanRing2.scale.setScalar(1 + Math.sin(scanProg2 * Math.PI) * 0.12);
 
-      // 扫描光幕：跟随主环
-      scanPlane.position.y = scanY;
-      scanPlane.material.opacity = mainAlpha * 0.4;
-
       // 扫描光点：高亮白点，增强科技感
       scanDot.position.y = scanY;
       scanDot.material.opacity = mainAlpha;
@@ -240,6 +230,13 @@
 
       // 底部补光强度随扫描变化
       bottomLight.intensity = 1.2 + Math.sin(scanProg * Math.PI) * 0.8;
+
+      // 环境光呼吸效果 - 增强整体光影动态感
+      var ambientBreathe = 0.6 + Math.sin(Date.now() * 0.0008) * 0.2; // 0.4~0.8
+      ambient.intensity = ambientBreathe;
+
+      // 主光源强度随扫描微调 - 增强科技感
+      key.intensity = 1.8 + Math.sin(scanProg * Math.PI) * 0.6;
 
       renderer.render(scene, camera);
     }
