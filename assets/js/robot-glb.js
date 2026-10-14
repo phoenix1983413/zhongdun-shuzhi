@@ -18,9 +18,9 @@
     return;
   }
 
-  // Three.js r148（最后一个支持 examples/js/ 非 ESM 加载器的版本）
-  var SCRIPT = "https://cdn.jsdelivr.net/npm/three@0.148.0/build/three.min.js";
-  var LOADER = "https://cdn.jsdelivr.net/npm/three@0.148.0/examples/js/loaders/GLTFLoader.js";
+  // Three.js r125（examples/js/ 非 ESM 加载器稳定可用）
+  var SCRIPT = "https://cdn.jsdelivr.net/npm/three@0.125.0/build/three.min.js";
+  var LOADER = "https://cdn.jsdelivr.net/npm/three@0.125.0/examples/js/loaders/GLTFLoader.js";
 
   function loadScript(url) {
     return new Promise(function (resolve, reject) {
@@ -56,7 +56,7 @@
     var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(container.clientWidth, container.clientHeight);
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.outputEncoding = THREE.sRGBEncoding;
     container.appendChild(renderer.domElement);
 
     // ---- 灯光 ----
