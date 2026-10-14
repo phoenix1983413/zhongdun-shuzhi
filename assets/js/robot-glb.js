@@ -62,21 +62,26 @@
     renderer.outputEncoding = THREE.sRGBEncoding;
     container.appendChild(renderer.domElement);
 
-    // ---- 灯光 ----
-    var ambient = new THREE.AmbientLight(0xffffff, 0.6);
+    // 灯光 - 增强科技感
+    var ambient = new THREE.AmbientLight(0x404060, 0.8);
     scene.add(ambient);
 
-    var key = new THREE.DirectionalLight(0x22d3ee, 1.8);
+    var key = new THREE.DirectionalLight(0x22d3ee, 2.2);
     key.position.set(3, 5, 5);
     scene.add(key);
 
-    var fill = new THREE.DirectionalLight(0x0066cc, 0.9);
+    var fill = new THREE.DirectionalLight(0x0066cc, 1.2);
     fill.position.set(-4, 2, -2);
     scene.add(fill);
 
-    var rim = new THREE.DirectionalLight(0xffffff, 0.4);
+    var rim = new THREE.DirectionalLight(0xffffff, 0.6);
     rim.position.set(0, 1, -3);
     scene.add(rim);
+
+    // 底部补光：增强全息底座光晕
+    var bottomLight = new THREE.PointLight(0x22d3ee, 1.5, 6);
+    bottomLight.position.set(0, -1.5, 0);
+    scene.add(bottomLight);
 
     // ---- 地面反射光圈（装饰）----
     var ringGeo = new THREE.RingGeometry(0.9, 1.0, 64);
@@ -86,18 +91,47 @@
     ring.position.y = -1.2;
     scene.add(ring);
 
-    // ---- 全息扫描环（替代原 2D canvas 的扫描光效）----
-    var scanRingGeo = new THREE.TorusGeometry(1.15, 0.018, 8, 80);
+    // ---- 全息扫描环（增强版：多层光效 + 动态光点）----
+    // 主扫描环 - 更粗更亮
+    var scanRingGeo = new THREE.TorusGeometry(1.35, 0.025, 8, 80);
     var scanRingMat = new THREE.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0 });
     var scanRing = new THREE.Mesh(scanRingGeo, scanRingMat);
-    scanRing.rotation.x = Math.PI / 2; // 水平放置
+    scanRing.rotation.x = Math.PI / 2;
     scene.add(scanRing);
 
-    // 扫描光幕：半透明平面，营造体积光感
-    var scanPlaneGeo = new THREE.PlaneGeometry(2.8, 0.08);
+    // 副扫描环 - 更大更淡，营造扩散感
+    var scanRing2Geo = new THREE.TorusGeometry(1.55, 0.012, 8, 80);
+    var scanRing2Mat = new THREE.MeshBasicMaterial({ color: 0x00aaff, transparent: true, opacity: 0 });
+    var scanRing2 = new THREE.Mesh(scanRing2Geo, scanRing2Mat);
+    scanRing2.rotation.x = Math.PI / 2;
+    scene.add(scanRing2);
+
+    // 扫描光幕：加宽，增强体积光感
+    var scanPlaneGeo = new THREE.PlaneGeometry(3.2, 0.12);
     var scanPlaneMat = new THREE.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0, side: THREE.DoubleSide });
     var scanPlane = new THREE.Mesh(scanPlaneGeo, scanPlaneMat);
     scene.add(scanPlane);
+
+    // 扫描光点 - 跟随扫描环移动的高亮粒子
+    var scanDotGeo = new THREE.SphereGeometry(0.04, 8, 8);
+    var scanDotMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    var scanDot = new THREE.Mesh(scanDotGeo, scanDotMat);
+    scene.add(scanDot);
+
+    // 垂直数据流线 - 增强科技感
+    var dataLinesGroup = new THREE.Group();
+    var lineCount = 6;
+    for (var i = 0; i < lineCount; i++) {
+      var angle = (i / lineCount) * Math.PI * 2;
+      var lineGeo = new THREE.CylinderGeometry(0.003, 0.003, 3.5, 4);
+      var lineMat = new THREE.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0.15 });
+      var line = new THREE.Mesh(lineGeo, lineMat);
+      line.position.x = Math.cos(angle) * 1.4;
+      line.position.z = Math.sin(angle) * 1.4;
+      line.position.y = 0.5;
+      dataLinesGroup.add(line);
+    }
+    scene.add(dataLinesGroup);
 
     // ---- 加载 GLB ----
     var loader = new THREE.GLTFLoader();
@@ -108,11 +142,11 @@
       function (gltf) {
         var model = gltf.scene;
 
-        // 自动缩放：把模型高度归一到约 2.4 单位
+        // 自动缩放：把模型高度归一到约 3.2 单位（比原来大 1/3）
         var box = new THREE.Box3().setFromObject(model);
         var size = box.getSize(new THREE.Vector3());
         var maxDim = Math.max(size.x, size.y, size.z);
-        var targetHeight = 2.4;
+        var targetHeight = 3.2;
         var scale = maxDim > 0 ? targetHeight / maxDim : 1;
         model.scale.setScalar(scale);
 
@@ -171,14 +205,41 @@
         modelRef.rotation.y += 0.004;
       }
 
-      // ---- 全息扫描环动画 ----
-      var scanProg = (Date.now() * 0.00004) % 1;
-      var scanY = -0.2 + scanProg * 2.8;
-      var scanAlpha = Math.sin(scanProg * Math.PI) * 0.55;
+      // ---- 全息扫描环动画（增强版）----
+      var scanProg = (Date.now() * 0.00006) % 1; // 加快扫描速度
+      var scanY = -0.4 + scanProg * 3.2; // 扩大扫描范围
+      
+      // 主扫描环：更亮更明显
+      var mainAlpha = Math.sin(scanProg * Math.PI) * 0.7;
       scanRing.position.y = scanY;
-      scanRing.material.opacity = scanAlpha;
+      scanRing.material.opacity = mainAlpha;
+      scanRing.scale.setScalar(1 + Math.sin(scanProg * Math.PI) * 0.08); // 扫描时微微膨胀
+
+      // 副扫描环：延迟扩散
+      var scanProg2 = ((Date.now() * 0.00006 - 0.05) % 1);
+      if (scanProg2 < 0) scanProg2 += 1;
+      var scanY2 = -0.4 + scanProg2 * 3.2;
+      var ring2Alpha = Math.sin(scanProg2 * Math.PI) * 0.3;
+      scanRing2.position.y = scanY2;
+      scanRing2.material.opacity = ring2Alpha;
+      scanRing2.scale.setScalar(1 + Math.sin(scanProg2 * Math.PI) * 0.12);
+
+      // 扫描光幕：跟随主环
       scanPlane.position.y = scanY;
-      scanPlane.material.opacity = scanAlpha * 0.35;
+      scanPlane.material.opacity = mainAlpha * 0.4;
+
+      // 扫描光点：高亮白点，增强科技感
+      scanDot.position.y = scanY;
+      scanDot.material.opacity = mainAlpha;
+
+      // 垂直数据流线：整体透明度随扫描节奏呼吸
+      var breathe = (Math.sin(Date.now() * 0.001) + 1) * 0.5; // 0~1
+      dataLinesGroup.children.forEach(function (line) {
+        line.material.opacity = 0.08 + breathe * 0.12;
+      });
+
+      // 底部补光强度随扫描变化
+      bottomLight.intensity = 1.2 + Math.sin(scanProg * Math.PI) * 0.8;
 
       renderer.render(scene, camera);
     }
