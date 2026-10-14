@@ -272,6 +272,22 @@ html[data-theme="deep"] .hero__visual.holo::after {
   border-radius: inherit;
 }
 
+/* 3D 机器人容器（GLB 模型） */
+#robot3d {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+#robot3d canvas {
+  pointer-events: none;
+}
+
+/* 当 3D 模型加载成功后，隐藏 2D 线框 canvas */
+.robot-glb-loaded #fxRobot {
+  display: none;
+}
+
 /* 四角定位角标 */
 .holo__hud {
   position: absolute;

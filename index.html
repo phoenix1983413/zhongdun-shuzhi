@@ -31,6 +31,10 @@
 <link rel="icon" href="assets/img/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 
+<!-- Three.js（用于首页 3D 机器人 GLB 渲染） -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/loaders/GLTFLoader.js"></script>
+
 <link rel="stylesheet" href="assets/css/site.css">
 <!-- 首页专用「深空」主题层：只在首页加载，内页不受影响 -->
 <link rel="stylesheet" href="assets/css/tech.css">
@@ -145,8 +149,10 @@
       </div>
 
       <div class="hero__visual holo" aria-hidden="true">
-        <!-- 全息人形机器人线框：由 hero-tech.js 在 canvas 上绘制 -->
-        <canvas id="fxRobot"></canvas>
+        <!-- 3D 机器人模型：由 Three.js 加载 GLB -->
+        <div id="robot3d"></div>
+        <!-- 保留 canvas 作为 Three.js 失败时的回退 -->
+        <canvas id="fxRobot" style="display:none;"></canvas>
         <div class="holo__hud">
           <span class="holo__corner holo__corner--tl"></span>
           <span class="holo__corner holo__corner--tr"></span>
@@ -562,5 +568,6 @@
 
 <script src="assets/js/site.js" defer></script>
 <script src="assets/js/hero-tech.js" defer></script>
+<script src="assets/js/robot-glb.js" defer></script>
 </body>
 </html>
