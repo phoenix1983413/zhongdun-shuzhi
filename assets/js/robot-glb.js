@@ -52,8 +52,8 @@
 
     // 相机：透视，略俯视，确保模型完整居中
     var camera = new THREE.PerspectiveCamera(45, container.clientWidth / Math.max(1, container.clientHeight), 0.1, 1000);
-    camera.position.set(0, 0.2, 5.5); // 相机降到更低位置
-    camera.lookAt(0, -0.1, 0); // 视角目标更低，模型在画面中更靠下
+    camera.position.set(0, 0.0, 5.5); // 相机降到 y=0
+    camera.lookAt(0, 0.2, 0); // 视角略高于相机，模型在画面中偏下
 
     // 渲染器：透明背景，与深色背景融合
     var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -80,7 +80,7 @@
 
     // 底部补光：增强全息底座光晕
     var bottomLight = new THREE.PointLight(0x22d3ee, 1.5, 6);
-    bottomLight.position.set(0, -3.5, 0); // 跟随模型下沉
+    bottomLight.position.set(0, -2.5, 0); // 跟随模型下沉
     scene.add(bottomLight);
 
     // ---- 地面反射光圈（装饰）----
@@ -88,7 +88,7 @@
     var ringMat = new THREE.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0.15, side: THREE.DoubleSide });
     var ring = new THREE.Mesh(ringGeo, ringMat);
     ring.rotation.x = -Math.PI / 2;
-    ring.position.y = -2.5; // 跟随模型下沉
+    ring.position.y = -2.0; // 模型底部下方
     scene.add(ring);
 
     // ---- 全息扫描环（增强版：多层光效 + 动态光点）----
@@ -144,16 +144,16 @@
         var scale = maxDim > 0 ? targetHeight / maxDim : 1;
         model.scale.setScalar(scale);
 
-        // 居中：底部对齐到 y=0
+        // 居中：底部对齐到 y=0，然后整体下沉 1.5 单位
         box.setFromObject(model);
         var center = box.getCenter(new THREE.Vector3());
         model.position.x = -center.x;
         model.position.z = -center.z;
-        model.position.y = -box.min.y;
+        model.position.y = -box.min.y - 1.5; // 底部对齐后再下沉
 
         scene.add(model);
 
-        // 入场动画：从略下方浮起
+        // 入场动画：从略下方浮起到最终位置
         model.position.y -= 0.3;
         model.scale.setScalar(scale * 0.95);
         animateIn(model, scale);
@@ -184,13 +184,13 @@
       requestAnimationFrame(render);
 
       if (modelRef) {
-        // 入场缓动 - 最终位置下沉到 y=-2.0
+        // 入场缓动 - 回到加载后的最终位置
         if (animatingIn) {
-          modelRef.position.y += (-2.0 - modelRef.position.y) * 0.06;
+          modelRef.position.y += (0 - modelRef.position.y) * 0.06;
           var s = modelRef.scale.x;
           var ns = s + (targetScale - s) * 0.06;
           modelRef.scale.setScalar(ns);
-          if (Math.abs(modelRef.position.y + 2.0) < 0.001 && Math.abs(ns - targetScale) < 0.001) {
+          if (Math.abs(modelRef.position.y) < 0.001 && Math.abs(ns - targetScale) < 0.001) {
             animatingIn = false;
           }
         }
@@ -201,7 +201,7 @@
 
       // ---- 全息扫描环动画（增强版 + 呼吸光效）----
       var scanProg = (Date.now() * 0.00006) % 1; // 加快扫描速度
-      var scanY = -1.2 + scanProg * 3.5; // 扩大扫描范围，覆盖下沉后的模型
+      var scanY = -1.5 + scanProg * 3.5; // 从模型底部(-1.5)扫到顶部(2.0)
       
       // 主扫描环：更亮更明显
       var mainAlpha = Math.sin(scanProg * Math.PI) * 0.7;
@@ -212,7 +212,7 @@
       // 副扫描环：延迟扩散
       var scanProg2 = ((Date.now() * 0.00006 - 0.05) % 1);
       if (scanProg2 < 0) scanProg2 += 1;
-      var scanY2 = -1.2 + scanProg2 * 3.5; // 扩大扫描范围
+      var scanY2 = -1.5 + scanProg2 * 3.5; // 同步调整范围
       var ring2Alpha = Math.sin(scanProg2 * Math.PI) * 0.3;
       scanRing2.position.y = scanY2;
       scanRing2.material.opacity = ring2Alpha;
